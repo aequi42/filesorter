@@ -1,35 +1,33 @@
-const inquirer = require("inquirer");
-const chalk = require("chalk");
-const path = require("path");
-const _ = require("lodash");
-const { loadFiles, copyFiles } = require("../fileOps");
-const { fileSelectionSettingPrompt } = require("../prompts");
-const { format, parse } = require("date-fns");
+const inquirer = require('inquirer')
+const chalk = require('chalk')
+const path = require('path')
+const _ = require('lodash')
+const { loadFiles, copyFiles } = require('../fileOps')
+const { fileSelectionSettingPrompt } = require('../prompts')
+const { format, parse } = require('date-fns')
 
 async function copyFilesAction() {
-  let answers;
+  let answers
 
   do {
-    answers = await fileSelectionSettingPrompt();
-  } while (!answers.confirm);
-  const { pathToDir, filter, targetPath, dateFormat, mode } = answers;
-  const files = await loadFiles(path.normalize(pathToDir), filter);
-  const withGroupKey = addGroupKey(dateFormat, files);
-  const grouped = groupFiles(withGroupKey);
+    answers = await fileSelectionSettingPrompt()
+  } while (!answers.confirm)
+  const { pathToDir, filter, targetPath, dateFormat, mode } = answers
+  const files = await loadFiles(path.normalize(pathToDir), filter)
+  const withGroupKey = addGroupKey(dateFormat, files)
+  const grouped = groupFiles(withGroupKey)
 
   var { confirmCopy } = await inquirer.prompt([
     {
-      type: "confirm",
-      message: `${mode === "move" ? "Move" : "Copy"} ${chalk.blue(
-        withGroupKey.length
-      )} files into ${chalk.blue(grouped.length)} groups inside ${chalk.yellow(
-        targetPath
-      )}?`,
-      name: "confirmCopy",
+      type: 'confirm',
+      message: `${mode === 'move' ? 'Move' : 'Copy'} ${chalk.blue(withGroupKey.length)} files into ${chalk.blue(
+        grouped.length
+      )} groups inside ${chalk.yellow(targetPath)}?`,
+      name: 'confirmCopy',
     },
-  ]);
+  ])
   if (confirmCopy) {
-    await copyFiles(grouped, targetPath, mode);
+    await copyFiles(grouped, targetPath, mode)
   }
 }
 
@@ -40,21 +38,21 @@ async function copyFilesAction() {
  */
 function groupFiles(filesWithDates) {
   const groupedByDay = filesWithDates.reduce((agg, curr, idx) => {
-    const date = curr[0];
-    const val = curr[1];
-    const existingGroup = agg.find((a) => a[0] === date);
+    const date = curr[0]
+    const val = curr[1]
+    const existingGroup = agg.find((a) => a[0] === date)
 
     if (existingGroup) {
       // console.log(`found ${date}`);
-      existingGroup[1].push(val);
+      existingGroup[1].push(val)
     } else {
       // console.log(`not found ${date}`);
-      agg.push([date, [val]]);
+      agg.push([date, [val]])
     }
-    return agg;
-  }, []);
+    return agg
+  }, [])
 
-  return groupedByDay;
+  return groupedByDay
 }
 
 /**
@@ -65,15 +63,15 @@ function groupFiles(filesWithDates) {
  */
 function addGroupKey(dateFormat, files) {
   const parseDate = (filename) => {
-    const baseName = path.basename(filename);
-    const withoutExt = baseName.substr(0, 15);
-    return parse(withoutExt, "yyyyMMdd_HHmmss", new Date());
-  };
+    const baseName = path.basename(filename)
+    const withoutExt = baseName.substr(0, 15)
+    return parse(withoutExt, 'yyyyMMdd_HHmmss', new Date())
+  }
   const formatedDateFromFilename = (filename) => {
-    var date = parseDate(filename);
-    return format(date, dateFormat);
-  };
-  return files.map((f) => [formatedDateFromFilename(f), f]);
+    var date = parseDate(filename)
+    return format(date, dateFormat)
+  }
+  return files.map((f) => [formatedDateFromFilename(f), f])
 }
 
-module.exports = copyFilesAction;
+module.exports = copyFilesAction
