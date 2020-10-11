@@ -7,6 +7,9 @@
     "name": "Florian Wojtenek",
     "email": "florian@wojtenek.de"
   },
+  "scripts": {
+    "updateThirdPartyLicenses": "node ./tools/updateThirdPartyLicenses.js"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.0",
@@ -19,6 +22,7 @@
   },
   "devDependencies": {
     "husky": "^4.3.0",
+    "license-ls": "^1.5.0",
     "prettier": "^2.1.2"
   },
   "husky": {
@@ -27,6 +31,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md}": "prettier --write",
+    "package.json": ["yarn updateThirdPartyLicenses", "git add ThirdPartyLicenses.md"]
   }
 }
