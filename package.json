@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "sorts files by date",
   "main": "index.js",
+  "author": {
+    "name": "Florian Wojtenek",
+    "email": "florian@wojtenek.de"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.0",
