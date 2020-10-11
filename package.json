@@ -9,7 +9,20 @@
     "date-fns": "^2.16.1",
     "inquirer": "^7.3.3",
     "inquirer-fuzzy-path": "^2.3.0",
+    "lint-staged": "^10.4.0",
     "lodash": "^4.17.20",
     "ora": "^5.1.0"
+  },
+  "devDependencies": {
+    "husky": "^4.3.0",
+    "prettier": "^2.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
   }
 }
